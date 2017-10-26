@@ -2,6 +2,6 @@
 
 For eventual incorporation into sbt-ethereum.
 
-To run, type:
+To run (I hope), type:
 
     $ sbt sethPlugin
