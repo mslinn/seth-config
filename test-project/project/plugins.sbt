@@ -1,3 +1,3 @@
-lazy val root = Project("plugins", file(".")) dependsOn sethConfig
+lazy val root = Project("plugins", file(".")) dependsOn sethPlugin
 
-lazy val sethConfig = file("..").getAbsoluteFile.toURI
+lazy val sethPlugin = file("..").getAbsoluteFile.toURI
