@@ -1,24 +1,18 @@
 organization := "com.micronautics"
 
-name := "my-new-project" // TODO provide a short yet descriptive name
+name := "seth-config"
 
 version := "0.1.0"
 
-scalaVersion := "2.12.4"
+sbtPlugin := true
+
+scalaVersion in Global := "2.10.6"
 
 scalacOptions ++= Seq(
   "-deprecation",
   "-encoding", "UTF-8",
   "-feature",
-  "-target:jvm-1.8",
-  "-unchecked",
-  "-Ywarn-adapted-args",
-  "-Ywarn-dead-code",
-  "-Ywarn-numeric-widen",
-  "-Ywarn-unused",
-  "-Ywarn-value-discard",
-  "-Xfuture",
-  "-Xlint"
+  "-unchecked"
 )
 
 scalacOptions in (Compile, doc) ++= baseDirectory.map {
@@ -31,8 +25,6 @@ scalacOptions in (Compile, doc) ++= baseDirectory.map {
 javacOptions ++= Seq(
   "-Xlint:deprecation",
   "-Xlint:unchecked",
-  "-source", "1.8",
-  "-target", "1.8",
   "-g:vars"
 )
 
@@ -40,9 +32,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe"   % "config"      % "1.2.1" withSources(),
-  "org.scalatest"  %% "scalatest"  % "3.0.3" % Test withSources(),
-  "junit"          %  "junit"      % "4.12"  % Test
+  "com.typesafe"   % "config"      % "1.2.1" withSources()
 )
 
 logLevel := Level.Warn
@@ -59,5 +49,3 @@ initialCommands in console := """
                                 |""".stripMargin
 
 cancelable := true
-
-sublimeTransitive := true

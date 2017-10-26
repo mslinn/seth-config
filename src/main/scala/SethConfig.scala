@@ -1,4 +1,5 @@
 import com.typesafe.config.Config
+import sbt.{AutoPlugin, TaskKey}
 
 object Colors {
   import java.util.{List => JList}
@@ -18,7 +19,7 @@ object Colors {
 }
 
 case class Colors(foreground: String, background: String) {
-  def toHex(str: String): String = str.toCharArray.map { c =>
+  protected def toHex(str: String): String = str.toCharArray.map { c =>
     if (c.isValidChar) c.toString else s"\\u${ c.toInt }"
   }.mkString
 
@@ -35,10 +36,10 @@ object Prop {
       show   = config.getBoolean(s"$name-show")
     )
 
-  def parseValue(config: Config, name: String): String =
+  protected def parseValue(config: Config, name: String): String =
     try { config.getString(name) } catch { case e: Exception => e.getMessage }
 
-  def parseColors(config: Config, name: String): Colors =
+  protected def parseColors(config: Config, name: String): Colors =
     try {
       Colors(config.getStringList(s"$name-colors"))
     } catch {
@@ -47,7 +48,7 @@ object Prop {
 }
 
 case class Prop(name: String, value: String, colors: Colors, show: Boolean=true) {
-  def toHex(str: String): String = str.toCharArray.map { c =>
+  protected def toHex(str: String): String = str.toCharArray.map { c =>
     if (c.isValidChar) c.toString else s"\\u${ c.toInt }"
   }.mkString
 
@@ -58,8 +59,8 @@ case class Prompt(
   name: Prop,
   suffix: Prop,
   sbtProject: Prop,
-  gitBranch: Prop, // only includes clean branch colors
   showColors: Boolean,
+  gitBranch: Prop, // only includes clean branch colors
   gitBranchDirtyColors: Colors = Colors("yellow",  Colors.bgNoColor),
   miscTextColors: Colors       = Colors("magenta", Colors.bgNoColor)
 ) {
@@ -80,8 +81,8 @@ case class SethConfig(prompt: Prompt) {
 }
 
 object SethConfig {
-  lazy val sethConfig: Config = com.typesafe.config.ConfigFactory.load("seth.conf").getConfig("seth")
-  lazy val promptConfig: Config = sethConfig.getConfig("prompt")
+  protected lazy val sethConfig: Config = com.typesafe.config.ConfigFactory.load("seth.conf").getConfig("seth")
+  protected lazy val promptConfig: Config = sethConfig.getConfig("prompt")
 
   def apply: SethConfig = {
     val prompt: Prompt = Prompt(
@@ -97,7 +98,19 @@ object SethConfig {
   }
 }
 
-object Main extends App {
-  val sethConfig = SethConfig.apply
-  println(sethConfig)
+object TestPlugin extends AutoPlugin {
+  override def trigger = allRequirements
+
+  object autoImport {
+    lazy val sethConfig = TaskKey[Unit]("seth-config", "Tests the seth-config autoplugin")
+  }
+
+  import autoImport._
+
+    override lazy val projectSettings = Seq(
+      sethConfig := {
+        val sethConfig = SethConfig.apply
+        println(sethConfig)
+      }
+    )
 }
