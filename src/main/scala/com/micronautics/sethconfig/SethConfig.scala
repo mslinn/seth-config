@@ -1,3 +1,5 @@
+package com.micronautics.sethconfig
+
 import com.typesafe.config.Config
 import sbt.{AutoPlugin, TaskKey}
 

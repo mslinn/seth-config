@@ -4,4 +4,4 @@ import Keys._
 name := "test-project"
 version := "0.1.0"
 
-enablePlugins(sethPlugin)
+enablePlugins(com.micronautics.sethconfig.TestPlugin)

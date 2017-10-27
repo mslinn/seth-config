@@ -1,3 +1,1 @@
-lazy val root = Project("plugins", file(".")) dependsOn sethPlugin
-
-lazy val sethPlugin = file("..").getAbsoluteFile.toURI
+addSbtPlugin( "com.micronautics" % "seth-config" % "0.1.0-SNAPSHOT" )
